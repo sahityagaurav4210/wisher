@@ -1,6 +1,9 @@
 require('dotenv/config');
 
 const Bootup = require('./server');
+const colors = require('colors');
+
+colors.enable();
 
 
 const start = async function () {

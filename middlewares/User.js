@@ -1,35 +1,22 @@
-const db = require('../db/models');
-const User = require('../db/models/user')(db.sequelize, db.Sequelize.DataTypes);
-
+const User = require('../Types/User');
 const Codes = require('../modules/Enums/Reply');
 
+const { errorParser } = require('../utils/index');
+
+let user = new User();
 let rspMsg;
 
-const isUserAlreadyRegistered = async function (request, reply, done) {
+const isUserAlreadyRegistered = async function (request, reply) {
     try {
         const { phone } = request.body;
-        const user = await User.findOne({
-            where: {
-                phone
-            }
-        });
 
-        if (!user) {
-            return done();
-        }
-        else {
-            rspMsg = {
-                message: 'Request failed',
-                error: 'User already exists'
-            }
-            return reply.code(Codes.BADRESPONSE).send(rspMsg);
-        }
+        await user.isUserAlreadyExists(phone);
+        return;
+
     } catch (error) {
-        console.error(error);
-        rspMsg = {
-            message: 'An error occured'
-        }
-        return reply.code(Codes.ERROR).send(rspMsg);
+        console.error('An error occured inside isUserAlreadyRegistered middleware method.'.red);
+        rspMsg = errorParser(error);
+        return reply.code(rspMsg.code).send({ ...rspMsg });
     }
 }
 

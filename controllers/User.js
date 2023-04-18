@@ -1,25 +1,24 @@
-const db = require('../db/models');
+const User = require('../Types/User');
 
-const User = require('../db/models/user')(db.sequelize, db.Sequelize.DataTypes);
-
+let user = new User();
 let rspMsg;
 
 const registerNewUser = async function (request, reply) {
-    try {
-        const user = await User.create(request.body);
-        rspMsg = {
-            message: 'Registered successfuly',
-            user
-        }
-        return reply.code(201).send(rspMsg);
-    } catch (error) {
-        console.log('Error in registerNewUser endpoint.');
-        console.log(error);
-        rspMsg = {
-            message: 'An error occured'
-        }
-        return reply.code(500).json(rspMsg);
+  try {
+    const record = await user.registerNewUser(request.body);
+    rspMsg = {
+      message: 'Registered successfuly',
+      user: record
     }
+    return reply.code(201).send(rspMsg);
+  } catch (error) {
+    console.log('Error in registerNewUser endpoint.');
+    console.log(error);
+    rspMsg = {
+      message: 'An error occured'
+    }
+    return reply.code(500).json(rspMsg);
+  }
 }
 
 module.exports = { registerNewUser };

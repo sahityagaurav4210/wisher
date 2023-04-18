@@ -1,7 +1,7 @@
 const User = require('./User');
 
 class Controllers {
-    static user = function () {
+    static get user() {
         return User;
     }
 }
