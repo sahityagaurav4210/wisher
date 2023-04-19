@@ -14,4 +14,9 @@ const isValidRequest = function (request, reply, done) {
     }
 }
 
-module.exports = { isValidRequest };
+const logger = function (request, reply, done) {
+    console.info(`\n====A request received at ${new Date().toLocaleString()} for ${request.url} and method was ${request.method}====\n`.cyan);
+    done();
+}
+
+module.exports = { isValidRequest, logger };

@@ -11,9 +11,6 @@ class IUser {
     registerNewUser = async function (requestBody = {}) {
         throw new NotImplementedException(Errors.NotImplementedExceptionMsg.message);
     }
-    isUserAlreadyExists = async function (phone) {
-        throw new NotImplementedException(Errors.NotImplementedExceptionMsg.message);
-    }
 }
 
 module.exports = IUser;

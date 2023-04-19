@@ -1,3 +1,5 @@
+const { types } = require("pg");
+
 const Types = Object.freeze({
   Array: 'array',
   Object: 'object',
@@ -16,6 +18,9 @@ const BadReq = Object.freeze({
     },
     code: {
       type: Types.Int
+    },
+    message: {
+      type: Types.String
     }
   }
 });

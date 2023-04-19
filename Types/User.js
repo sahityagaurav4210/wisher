@@ -1,5 +1,3 @@
-const db = require('../db/models/');
-const user = require('../db/models/user')(db.sequelize, db.Sequelize.DataTypes);
 const Server = require('../server');
 
 const IUser = require('../Interfaces/IUser');
@@ -10,8 +8,11 @@ const RecordExistsException = require('../modules/Exceptions/RecordExists');
 class User extends IUser {
     registerNewUser = async function (requestBody = {}) {
         try {
+            const { email } = requestBody;
             let createdAt, updatedAt;
 
+            // Formatting the received request
+            requestBody = email ? { ...requestBody } : { email: null, ...requestBody };
             createdAt = updatedAt = new Date();
             requestBody = {
                 ...requestBody,
@@ -19,31 +20,17 @@ class User extends IUser {
                 updatedAt
             }
 
+            //Creating a record in database
             const [record, metadata] = await Server.Instance.query(Queries.CALL_USER_FUNCTION, { replacements: { ...requestBody } });
-            const { registernewuser } = record[0];
 
+            //Checking whether record created or not and taking actions
+            const { registernewuser } = record[0];
             if (registernewuser > 0)
                 return;
             else {
                 RecordExistsExceptionMsg.message = 'Specified user already exists';
                 throw new RecordExistsException(RecordExistsExceptionMsg.message);
             }
-        } catch (error) {
-            throw error;
-        }
-    }
-    isUserAlreadyExists = async function (phone) {
-        try {
-            const record = await user.findOne({
-                where: {
-                    phone
-                }
-            });
-
-            if (!record)
-                return false;
-            else
-                throw new RecordExistsException(RecordExistsExceptionMsg.message);
         } catch (error) {
             throw error;
         }

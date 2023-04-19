@@ -1,12 +1,11 @@
 const Controllers = require('../controllers/');
 const Schema = require('../modules/Schema/ReplySchema');
 
+const { registerNewUserValidator } = require('../modules/Validations/User');
 const { user } = Controllers;
 
-const { isUserAlreadyRegistered } = require('../middlewares/User');
-
 const User = function (fastify, options, done) {
-    fastify.post('/register', user.registerNewUser);
+    fastify.post('/register', { schema: Schema.registerNewUserSchama, preHandler: registerNewUserValidator }, user.registerNewUser);
     done();
 }
 
