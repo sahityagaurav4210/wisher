@@ -6,7 +6,7 @@ const { user } = Controllers;
 const { isUserAlreadyRegistered } = require('../middlewares/User');
 
 const User = function (fastify, options, done) {
-    fastify.post('/register', { schema: Schema.registerNewUserSchama, preHandler: [isUserAlreadyRegistered] }, user.registerNewUser);
+    fastify.post('/register', user.registerNewUser);
     done();
 }
 

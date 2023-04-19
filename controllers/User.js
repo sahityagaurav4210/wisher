@@ -1,23 +1,21 @@
 const User = require('../Types/User');
+const { errorParser } = require('../utils');
 
 let user = new User();
 let rspMsg;
 
 const registerNewUser = async function (request, reply) {
   try {
-    const record = await user.registerNewUser(request.body);
+    await user.registerNewUser(request.body);
     rspMsg = {
       message: 'Registered successfuly',
-      user: record
+      user: request.body
     }
     return reply.code(201).send(rspMsg);
   } catch (error) {
-    console.log('Error in registerNewUser endpoint.');
-    console.log(error);
-    rspMsg = {
-      message: 'An error occured'
-    }
-    return reply.code(500).json(rspMsg);
+    console.log('Error in registerNewUser endpoint.'.red);
+    rspMsg = errorParser(error);
+    return reply.code(rspMsg.code).send(rspMsg);
   }
 }
 
