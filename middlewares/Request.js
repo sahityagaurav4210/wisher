@@ -21,7 +21,7 @@ const logger = async function (request, reply) {
     try {
         console.info(`\n====A request received at ${new Date().toLocaleString()} for ${request.url} and method was ${request.method}====\n`.cyan);
 
-        request.body.ipAddress && await create.createLog({ source: request.body.ipAddress });
+        await create.createLog({ source: request.body.ipAddress });
     } catch (error) {
         return reply.code(ReplyCodes.ERROR).send({
             message: 'An error occured',
@@ -30,5 +30,30 @@ const logger = async function (request, reply) {
     }
 }
 
+const authorize = function (request, reply, done) {
+    try {
+        const { ipAddress } = request.body;
+        const firstOctet = ipAddress ? Number.parseInt(ipAddress.split('.')[0]) : null;
+        const secondOctet = ipAddress ? Number.parseInt(ipAddress.split('.')[1]) : null
 
-module.exports = { isValidRequest, logger };
+        if (firstOctet && firstOctet === 127) {
+            delete request.body.ipAddress;
+        }
+        else if (firstOctet && firstOctet === 10) {
+            delete request.body.ipAddress;
+        }
+        else if (firstOctet && ((firstOctet === 172 && secondOctet < 32) || (firstOctet === 192 && secondOctet < 169))) {
+            delete request.body.ipAddress;
+        }
+
+        done();
+    } catch (error) {
+        return reply.code(ReplyCodes.ERROR).send({
+            message: 'An error occuced',
+            error
+        });
+    }
+}
+
+
+module.exports = { isValidRequest, logger, authorize };

@@ -4,7 +4,7 @@ const SYSTEM = require('../plugins/System');
 const ERROR = require('../plugins/Error');
 
 const { Sequelize } = require('sequelize');
-const { isValidRequest, logger } = require('../middlewares/Request');
+const { isValidRequest, logger, authorize } = require('../middlewares/Request');
 const { HOST, PORT } = process.env;
 
 fastify.register(SYSTEM);
@@ -14,7 +14,7 @@ fastify.register(require('../routes/index'), {
   prefix: '/'
 });
 
-
+fastify.addHook('preHandler', authorize);
 fastify.addHook('preHandler', logger);
 fastify.addHook('preHandler', isValidRequest);
 
@@ -49,8 +49,6 @@ class Bootup {
         port: PORT,
         host: HOST
       });
-
-      console.log(url);
       const { DB_PASS, DB_HOST, DB_NAME, DB_PORT, DIALECT } = fastify.SYSVARS;
 
       Bootup.#DB_HOST = DB_HOST;
