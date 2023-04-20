@@ -17,6 +17,11 @@ const User = Object.freeze({
         "any.required": "Date is required",
         "date.format": "Invalid DOB type.",
         "date.base": "Date must be of date type",
+    },
+    ipAddress: {
+        "any.required": "Request identity is required",
+        "string.pattern.base": "Please enter identity in valid format",
+        "string.base": "Identity must be of valid type"
     }
 });
 

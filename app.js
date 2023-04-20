@@ -8,8 +8,8 @@ colors.enable();
 
 const start = async function () {
   try {
-    await Bootup.connect();
     const url = await Bootup.start();
+    await Bootup.connect();
 
     console.info(`Server is started and listening on url ${url}`);
   } catch (error) {

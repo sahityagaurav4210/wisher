@@ -1,10 +1,12 @@
 const User = require('../Types/User');
-const { errorParser } = require('../utils');
+const Bootup = require('../server/index');
 
 let user = new User();
 let rspMsg;
 
 const registerNewUser = async function (request, reply) {
+  const { errorParser } = Bootup.SERVINSTANCE;
+
   try {
     await user.registerNewUser(request.body);
     rspMsg = {
@@ -13,7 +15,7 @@ const registerNewUser = async function (request, reply) {
     }
     return reply.code(201).send(rspMsg);
   } catch (error) {
-    console.log('Error in registerNewUser endpoint.'.red);
+    console.log('================Error in registerNewUser endpoint===================='.red);
     rspMsg = errorParser(error);
     return reply.code(rspMsg.code).send(rspMsg);
   }
