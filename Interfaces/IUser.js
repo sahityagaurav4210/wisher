@@ -11,6 +11,9 @@ class IUser {
     registerNewUser = async function (requestBody = {}) {
         throw new NotImplementedException(Errors.NotImplementedExceptionMsg.message);
     }
+    getRegisteredUsers = async function (phoneNumber) {
+        throw new NotImplementedException(Errors.NotImplementedExceptionMsg.message);
+    }
 }
 
 module.exports = IUser;

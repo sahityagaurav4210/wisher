@@ -26,6 +26,13 @@ const errorParser = function (error) {
                 error: Errors.InstantiationExceptionMsg.message
             }
             return errorMsg;
+        case 'RecordNotExistsException':
+            errorMsg = {
+                code: ReplyCodes.NOTFOUND,
+                name: 'RecordNotExistsException',
+                error: Errors.RecordNotExistsExceptionMsg.message
+            }
+            return errorMsg;
 
         default:
             errorMsg = {

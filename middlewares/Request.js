@@ -21,8 +21,11 @@ const logger = async function (request, reply) {
     try {
         console.info(`\n====A request received at ${new Date().toLocaleString()} for ${request.url} and method was ${request.method}====\n`.cyan);
 
-        await create.createLog({ source: request.body.ipAddress });
+        const { ipAddress } = request.body || request.query;
+        await create.createLog({ source: ipAddress });
     } catch (error) {
+        console.error('An error occured inside logger global middleware method'.red);
+
         return reply.code(ReplyCodes.ERROR).send({
             message: 'An error occured',
             error
@@ -32,7 +35,7 @@ const logger = async function (request, reply) {
 
 const authorize = function (request, reply, done) {
     try {
-        const { ipAddress } = request.body;
+        const { ipAddress } = request.body || request.query;
         const firstOctet = ipAddress ? Number.parseInt(ipAddress.split('.')[0]) : null;
         const secondOctet = ipAddress ? Number.parseInt(ipAddress.split('.')[1]) : null
 
@@ -48,6 +51,7 @@ const authorize = function (request, reply, done) {
 
         done();
     } catch (error) {
+        console.error('An error occured inside authorize global middleware method'.red);
         return reply.code(ReplyCodes.ERROR).send({
             message: 'An error occuced',
             error

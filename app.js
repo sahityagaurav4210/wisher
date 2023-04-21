@@ -11,7 +11,7 @@ const start = async function () {
     const url = await Bootup.start();
     await Bootup.connect();
 
-    console.info(`Server is started and listening on url ${url}`);
+    console.info(`Server is started and listening on url ${url}`.cyan);
   } catch (error) {
     console.log(error);
   }

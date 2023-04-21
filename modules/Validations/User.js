@@ -35,4 +35,28 @@ const registerNewUserValidator = function (request, reply, done) {
         return reply.code(ReplyCodes.BADRESPONSE).send(rspMsg);
     }
 }
-module.exports = { registerNewUserValidator };
+
+const getRegisteredUsersValidator = function (request, reply, done) {
+    const data = {
+        phone: request.params.phoneNumber,
+        ipAddress: request.query.ipAddress
+    }
+
+    const schema = joi.object({
+        phone: joi.number().optional().messages(Message.phone),
+        ipAddress: joi.string().regex(Rules.ipAddress).required().messages(Message.ipAddress)
+    });
+    const result = schema.validate(data);
+
+    if (!result.error)
+        return done();
+    else {
+        rspMsg = {
+            message: 'Invalid Payload',
+            error: result.error.details[0].message
+        }
+        return reply.code(ReplyCodes.BADRESPONSE).send(rspMsg);
+    }
+}
+
+module.exports = { registerNewUserValidator, getRegisteredUsersValidator };

@@ -7,6 +7,9 @@ const Errors = Object.freeze({
     },
     InstantiationExceptionMsg: {
         message: 'Interfaces or abstract classes can not be instantiated'
+    },
+    RecordNotExistsExceptionMsg: {
+        message: 'This record does not exists'
     }
 });
 
