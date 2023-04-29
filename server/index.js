@@ -6,7 +6,7 @@ const ERROR = require('../plugins/Error');
 
 const { Sequelize } = require('sequelize');
 const { isValidRequest, logger, authorize } = require('../middlewares/Request');
-const { HOST, PORT } = process.env;
+const { SERVHOST, PORT } = process.env;
 
 fastify.register(SYSTEM);
 fastify.register(ERROR);
@@ -27,11 +27,12 @@ class Bootup {
   static #DB_PORT;
   static #DB_PASS;
   static #server;
+  static #HOST;
 
   static connect = async function () {
     try {
       const sequelize = new Sequelize(Bootup.#DB_NAME, Bootup.#DB_HOST, Bootup.#DB_PASS, {
-        host: HOST,
+        host: Bootup.#HOST,
         port: Bootup.#DB_PORT,
         dialect: Bootup.#DIALECT
       });
@@ -48,9 +49,9 @@ class Bootup {
     try {
       const url = await fastify.listen({
         port: PORT,
-        host: HOST
+        host: SERVHOST
       });
-      const { DB_PASS, DB_HOST, DB_NAME, DB_PORT, DIALECT } = fastify.SYSVARS;
+      const { DB_PASS, DB_HOST, DB_NAME, DB_PORT, DIALECT,DB_HOST_ADDR } = fastify.SYSVARS;
 
       Bootup.#DB_HOST = DB_HOST;
       Bootup.#DB_PASS = DB_PASS;
@@ -58,6 +59,7 @@ class Bootup {
       Bootup.#DB_NAME = DB_NAME;
       Bootup.#DIALECT = DIALECT;
       Bootup.#server = fastify;
+      Bootup.#HOST= DB_HOST_ADDR;
 
       return url;
     } catch (error) {
