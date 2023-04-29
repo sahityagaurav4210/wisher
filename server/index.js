@@ -1,3 +1,4 @@
+require('dotenv/config');
 const fastify = require('fastify')();
 
 const SYSTEM = require('../plugins/System');

@@ -25,6 +25,7 @@ const logger = async function (request, reply) {
         await create.createLog({ source: ipAddress });
     } catch (error) {
         console.error('An error occured inside logger global middleware method'.red);
+        console.error(error);
 
         return reply.code(ReplyCodes.ERROR).send({
             message: 'An error occured',
