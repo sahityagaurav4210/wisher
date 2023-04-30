@@ -1,18 +1,21 @@
-require("dotenv/config");
-const { DB_HOST, DB_PASS, DB_NAME, HOST, DIALECT } = process.env;
+// require("dotenv/config");
+const envs = process.argv[process.argv.length - 1].split(",");
 
-module.exports = {
-  development: {
-    username: DB_HOST,
-    password: DB_PASS,
-    database: DB_NAME,
-    host: HOST,
-    dialect: DIALECT,
-    dialectOptions: {
-      ssl: {
-        require: true,
-        rejectUnauthorized: false,
-      },
+const object = envs.reduce((accumulator, currValue) => {
+  const val = currValue.split("=");
+
+  accumulator[val[0]] = val[1];
+  return accumulator;
+}, {});
+
+const development = {
+  ...object,
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false,
     },
   },
 };
+
+module.exports = development;

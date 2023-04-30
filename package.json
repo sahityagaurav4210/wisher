@@ -5,6 +5,7 @@
   "main": "app.js",
   "scripts": {
     "test": "jest",
+    
     "start": "node app.js",
     "dev": "nodemon app.js",
     "migrate": "npx sequelize-cli db:migrate",

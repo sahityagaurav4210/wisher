@@ -1,23 +1,23 @@
 require('dotenv/config');
-const fastify = require('fastify')();
+const fastify = require("fastify")();
 
-const SYSTEM = require('../plugins/System');
-const ERROR = require('../plugins/Error');
+const SYSTEM = require("../plugins/System");
+const ERROR = require("../plugins/Error");
 
-const { Sequelize } = require('sequelize');
-const { isValidRequest, logger, authorize } = require('../middlewares/Request');
+const { Sequelize } = require("sequelize");
+const { isValidRequest, logger, authorize } = require("../middlewares/Request");
 const { SERVHOST, PORT } = process.env;
 
 fastify.register(SYSTEM);
 fastify.register(ERROR);
 
-fastify.register(require('../routes/index'), {
-  prefix: '/'
+fastify.register(require("../routes/index"), {
+  prefix: "/",
 });
 
-fastify.addHook('preHandler', authorize);
-fastify.addHook('preHandler', logger);
-fastify.addHook('preHandler', isValidRequest);
+fastify.addHook("preHandler", authorize);
+fastify.addHook("preHandler", logger);
+fastify.addHook("preHandler", isValidRequest);
 
 class Bootup {
   static #instance;
@@ -31,11 +31,16 @@ class Bootup {
 
   static connect = async function () {
     try {
-      const sequelize = new Sequelize(Bootup.#DB_NAME, Bootup.#DB_HOST, Bootup.#DB_PASS, {
-        host: Bootup.#HOST,
-        port: Bootup.#DB_PORT,
-        dialect: Bootup.#DIALECT
-      });
+      const sequelize = new Sequelize(
+        Bootup.#DB_NAME,
+        Bootup.#DB_HOST,
+        Bootup.#DB_PASS,
+        {
+          host: Bootup.#HOST,
+          port: Bootup.#DB_PORT,
+          dialect: Bootup.#DIALECT,
+        }
+      );
 
       Bootup.#instance = sequelize;
       await sequelize.authenticate();
@@ -43,15 +48,20 @@ class Bootup {
     } catch (error) {
       throw error;
     }
-  }
+  };
 
   static start = async function () {
     try {
+      console.log('hello world',PORT);
       const url = await fastify.listen({
-        port: PORT,
-        host: SERVHOST
+        port: parseInt(PORT),
+        host: SERVHOST,
       });
-      const { DB_PASS, DB_HOST, DB_NAME, DB_PORT, DIALECT,DB_HOST_ADDR } = fastify.SYSVARS;
+      console.log('bello');
+      const { DB_PASS, DB_HOST, DB_NAME, DB_PORT, DIALECT, DB_HOST_ADDR } =
+        fastify.SYSVARS;
+
+      console.log("vars", fastify.SYSVARS);
 
       Bootup.#DB_HOST = DB_HOST;
       Bootup.#DB_PASS = DB_PASS;
@@ -59,14 +69,13 @@ class Bootup {
       Bootup.#DB_NAME = DB_NAME;
       Bootup.#DIALECT = DIALECT;
       Bootup.#server = fastify;
-      Bootup.#HOST= DB_HOST_ADDR;
+      Bootup.#HOST = DB_HOST_ADDR;
 
       return url;
     } catch (error) {
       throw error;
     }
-  }
-
+  };
 
   static get Instance() {
     return Bootup.#instance;

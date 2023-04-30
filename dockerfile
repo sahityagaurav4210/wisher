@@ -1,11 +1,16 @@
-FROM node:18
+FROM node:slim
 
-WORKDIR ./wisher
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+COPY .env ./
 
 RUN npm install
-RUN npm run init
-RUN npm run migrate
+
+COPY . .
+
+RUN chmod +rx ./init.sh ./start.sh
 
 EXPOSE 8083
 
-CMD [ "npm","start" ]
+CMD ["./start.sh" ]
