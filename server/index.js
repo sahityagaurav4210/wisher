@@ -1,4 +1,3 @@
-require('dotenv/config');
 const fastify = require("fastify")();
 
 const SYSTEM = require("../plugins/System");
@@ -8,12 +7,12 @@ const { Sequelize } = require("sequelize");
 const { isValidRequest, logger, authorize } = require("../middlewares/Request");
 const { SERVHOST, PORT } = process.env;
 
-fastify.register(SYSTEM);
-fastify.register(ERROR);
-
 fastify.register(require("../routes/index"), {
   prefix: "/",
 });
+
+fastify.register(SYSTEM);
+fastify.register(ERROR);
 
 fastify.addHook("preHandler", authorize);
 fastify.addHook("preHandler", logger);
@@ -52,16 +51,12 @@ class Bootup {
 
   static start = async function () {
     try {
-      console.log('hello world',PORT);
       const url = await fastify.listen({
-        port: parseInt(PORT),
+        port: PORT,
         host: SERVHOST,
       });
-      console.log('bello');
       const { DB_PASS, DB_HOST, DB_NAME, DB_PORT, DIALECT, DB_HOST_ADDR } =
         fastify.SYSVARS;
-
-      console.log("vars", fastify.SYSVARS);
 
       Bootup.#DB_HOST = DB_HOST;
       Bootup.#DB_PASS = DB_PASS;

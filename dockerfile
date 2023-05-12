@@ -5,13 +5,19 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 COPY .env ./
 
-RUN npm install
-RUN npx sequelize-cli db:create --env username=postgres,password=Gs!1034!psql_2023,host=postgres-db.cqctu22u9lwf.ap-south-1.rds.amazonaws.com,database=wisher,dialect=postgres
+ENV DB_HOST postgres
+ENV DB_PASS Gs!1034!psql_2023
+ENV HOST postgres-db.cqctu22u9lwf.ap-south-1.rds.amazonaws.com
+ENV DB_NAME wisher
+ENV PORT 8003
+ENV DIALECT postgres
+ENV DB_PORT 5432
+ENV SERVHOST 0.0.0.0
 
-RUN npx sequelize-cli db:migrate --env username=postgres,password=Gs!1034!psql_2023,host=postgres-db.cqctu22u9lwf.ap-south-1.rds.amazonaws.com,database=wisher,dialect=postgres
+RUN npm install
 
 COPY . .
 
-EXPOSE 8083
+EXPOSE 8003
 
-CMD ["npm","start" ]
+CMD ["./init.sh" ]

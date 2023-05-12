@@ -15,6 +15,4 @@ const start = async function () {
   }
 };
 
-console.log('calling start method.');
-console.log(process.env);
 start();

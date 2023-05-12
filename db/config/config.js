@@ -1,12 +1,13 @@
-// require("dotenv/config");
-const envs = process.argv[process.argv.length - 1].split(",");
+require("dotenv/config");
 
-const object = envs.reduce((accumulator, currValue) => {
-  const val = currValue.split("=");
-
-  accumulator[val[0]] = val[1];
-  return accumulator;
-}, {});
+const object = {
+  username: process.env.DB_HOST,
+  password: process.env.DB_PASS,
+  host: process.env.HOST,
+  database: process.env.DB_NAME,
+  dialect: process.env.DIALECT,
+  port: process.env.DB_PORT,
+};
 
 const development = {
   ...object,
